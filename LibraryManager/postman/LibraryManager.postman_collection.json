@@ -1,0 +1,1747 @@
+{
+	"info": {
+		"_postman_id": "ae2d8a2f-b640-4e8a-85b0-04fcff3ac0ac",
+		"name": "LibraryManager",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "43136625"
+	},
+	"item": [
+		{
+			"name": "Oauth2 JWT",
+			"item": [
+				{
+					"name": "Authorization Server",
+					"item": [
+						{
+							"name": "Login",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"\r",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								},
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"if (responseCode.code >= 200 && responseCode.code < 300) {\r",
+											"    var json = JSON.parse(responseBody);\r",
+											"    postman.setEnvironmentVariable('token', json.access_token);\r",
+											"}\r",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "basic",
+									"basic": [
+										{
+											"key": "password",
+											"value": "{{client-secret}}",
+											"type": "string"
+										},
+										{
+											"key": "username",
+											"value": "{{client-id}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "urlencoded",
+									"urlencoded": [
+										{
+											"key": "grant_type",
+											"value": "password",
+											"type": "text"
+										},
+										{
+											"key": "username",
+											"value": "maria.oliveira@example.com",
+											"type": "text"
+										},
+										{
+											"key": "password",
+											"value": "123456",
+											"type": "text"
+										},
+										{
+											"key": "scope",
+											"value": "read",
+											"type": "text",
+											"disabled": true
+										}
+									]
+								},
+								"url": {
+									"raw": "{{ashost}}/oauth2/token",
+									"host": [
+										"{{ashost}}"
+									],
+									"path": [
+										"oauth2",
+										"token"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Resource folder",
+					"item": [
+						{
+							"name": "Book",
+							"item": [
+								{
+									"name": "Book by Id (auth)",
+									"request": {
+										"auth": {
+											"type": "bearer",
+											"bearer": [
+												{
+													"key": "token",
+													"value": "{{token}}",
+													"type": "string"
+												}
+											]
+										},
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{rshost}}/books/10",
+											"host": [
+												"{{rshost}}"
+											],
+											"path": [
+												"books",
+												"10"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Book (admin only)",
+									"request": {
+										"auth": {
+											"type": "bearer",
+											"bearer": [
+												{
+													"key": "token",
+													"value": "{{token}}",
+													"type": "string"
+												}
+											]
+										},
+										"method": "PUT",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"title\": \"O Senhor dos Anéis: As Duas Torres\",\r\n    \"isbn\": \"9788550303058\",\r\n    \"edition\": \"1ª\",\r\n    \"totalCopies\": 10,\r\n    \"availableCopies\": 10\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{rshost}}/books/1",
+											"host": [
+												"{{rshost}}"
+											],
+											"path": [
+												"books",
+												"1"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Book by id (admin only)",
+									"request": {
+										"auth": {
+											"type": "bearer",
+											"bearer": [
+												{
+													"key": "token",
+													"value": "{{token}}",
+													"type": "string"
+												}
+											]
+										},
+										"method": "DELETE",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n  \"title\": \"Effective Java\",\r\n  \"isbn\": \"978-0134685991\",\r\n  \"edition\": \"3rd Edition\",\r\n  \"totalCopies\": 10,\r\n  \"availableCopies\": 7 \r\n}\r\n",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{rshost}}/books/11",
+											"host": [
+												"{{rshost}}"
+											],
+											"path": [
+												"books",
+												"11"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "New Book (admin only)",
+									"request": {
+										"auth": {
+											"type": "bearer",
+											"bearer": [
+												{
+													"key": "token",
+													"value": "{{token}}",
+													"type": "string"
+												}
+											]
+										},
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n  \"title\": \"Effective Java\",\r\n  \"isbn\": \"9780134685991\",\r\n  \"edition\": \"3rd\",\r\n  \"totalCopies\": 10,\r\n  \"availableCopies\": 10,\r\n  \"authors\": [\r\n    {\r\n        \"name\": \"Joshua Bloch\",\r\n        \"birthDate\":\"1961-08-28\"\r\n    }\r\n  ],\r\n  \"categories\": [\r\n        {\r\n            \"name\":\"Programing Languages\"\r\n        },\r\n        {\r\n            \"name\":\"information Technology\"\r\n        },\r\n        {\r\n            \"name\":\"Education\"\r\n        }\r\n    ]\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{rshost}}/books",
+											"host": [
+												"{{rshost}}"
+											],
+											"path": [
+												"books"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Books (auth)",
+									"request": {
+										"auth": {
+											"type": "bearer",
+											"bearer": [
+												{
+													"key": "token",
+													"value": "{{token}}",
+													"type": "string"
+												}
+											]
+										},
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{rshost}}/books?size=15",
+											"host": [
+												"{{rshost}}"
+											],
+											"path": [
+												"books"
+											],
+											"query": [
+												{
+													"key": "size",
+													"value": "15"
+												}
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Book by title/author/isbn (public)",
+									"request": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{rshost}}/books/search?query=harry&title=true&author=false&isbn=false\n",
+											"host": [
+												"{{rshost}}"
+											],
+											"path": [
+												"books",
+												"search"
+											],
+											"query": [
+												{
+													"key": "query",
+													"value": "harry"
+												},
+												{
+													"key": "title",
+													"value": "true"
+												},
+												{
+													"key": "author",
+													"value": "false"
+												},
+												{
+													"key": "isbn",
+													"value": "false\n"
+												}
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						},
+						{
+							"name": "Author",
+							"item": [
+								{
+									"name": "Authors (auth)",
+									"request": {
+										"auth": {
+											"type": "bearer",
+											"bearer": [
+												{
+													"key": "token",
+													"value": "{{token}}",
+													"type": "string"
+												}
+											]
+										},
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{rshost}}/authors?size=3",
+											"host": [
+												"{{rshost}}"
+											],
+											"path": [
+												"authors"
+											],
+											"query": [
+												{
+													"key": "size",
+													"value": "3"
+												}
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Author by id (auth)",
+									"request": {
+										"auth": {
+											"type": "bearer",
+											"bearer": [
+												{
+													"key": "token",
+													"value": "{{token}}",
+													"type": "string"
+												}
+											]
+										},
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{rshost}}}/authors/10",
+											"host": [
+												"{{rshost}}}"
+											],
+											"path": [
+												"authors",
+												"10"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Auhor (admin only)",
+									"request": {
+										"auth": {
+											"type": "bearer",
+											"bearer": [
+												{
+													"key": "token",
+													"value": "{{token}}",
+													"type": "string"
+												}
+											]
+										},
+										"method": "PUT",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n  \"name\": \"Graciliano Ramos\",\r\n  \"birthDate\": \"1892-09-27\"\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{rshost}}/authors/10",
+											"host": [
+												"{{rshost}}"
+											],
+											"path": [
+												"authors",
+												"10"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Author by id (admin only)",
+									"request": {
+										"auth": {
+											"type": "bearer",
+											"bearer": [
+												{
+													"key": "token",
+													"value": "{{token}}",
+													"type": "string"
+												}
+											]
+										},
+										"method": "DELETE",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n  \"title\": \"Effective Java\",\r\n  \"isbn\": \"978-0134685991\",\r\n  \"edition\": \"3rd Edition\",\r\n  \"totalCopies\": 10,\r\n  \"availableCopies\": 7 \r\n}\r\n",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{rshost}}/authors/10",
+											"host": [
+												"{{rshost}}"
+											],
+											"path": [
+												"authors",
+												"10"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "New Author (admin only)",
+									"request": {
+										"auth": {
+											"type": "bearer",
+											"bearer": [
+												{
+													"key": "token",
+													"value": "{{token}}",
+													"type": "string"
+												}
+											]
+										},
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n  \"name\": \"Novo Autor\",\r\n  \"birthDate\": \"2025-06-25\"\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{rshost}}/authors",
+											"host": [
+												"{{rshost}}"
+											],
+											"path": [
+												"authors"
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						},
+						{
+							"name": "Category",
+							"item": [
+								{
+									"name": "Categories (auth)",
+									"request": {
+										"auth": {
+											"type": "bearer",
+											"bearer": [
+												{
+													"key": "token",
+													"value": "{{token}}",
+													"type": "string"
+												}
+											]
+										},
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{rshost}}/categories?size=15",
+											"host": [
+												"{{rshost}}"
+											],
+											"path": [
+												"categories"
+											],
+											"query": [
+												{
+													"key": "size",
+													"value": "15"
+												}
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Category by id (auth)",
+									"request": {
+										"auth": {
+											"type": "bearer",
+											"bearer": [
+												{
+													"key": "token",
+													"value": "{{token}}",
+													"type": "string"
+												}
+											]
+										},
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{rshost}}/categories/1",
+											"host": [
+												"{{rshost}}"
+											],
+											"path": [
+												"categories",
+												"1"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "New Category (admin only)",
+									"request": {
+										"auth": {
+											"type": "bearer",
+											"bearer": [
+												{
+													"key": "token",
+													"value": "{{token}}",
+													"type": "string"
+												}
+											]
+										},
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n  \"name\": \"Nova Categoria\" \r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{rshost}}/categories",
+											"host": [
+												"{{rshost}}"
+											],
+											"path": [
+												"categories"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Category (admin only)",
+									"request": {
+										"auth": {
+											"type": "bearer",
+											"bearer": [
+												{
+													"key": "token",
+													"value": "{{token}}",
+													"type": "string"
+												}
+											]
+										},
+										"method": "PUT",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n  \"name\": \"Infantil\"\r\n }",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{rshost}}/categories/7",
+											"host": [
+												"{{rshost}}"
+											],
+											"path": [
+												"categories",
+												"7"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Category by id (admin only)",
+									"request": {
+										"auth": {
+											"type": "bearer",
+											"bearer": [
+												{
+													"key": "token",
+													"value": "{{token}}",
+													"type": "string"
+												}
+											]
+										},
+										"method": "DELETE",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{rshost}}/categories/7",
+											"host": [
+												"{{rshost}}"
+											],
+											"path": [
+												"categories",
+												"7"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Category by Name (public)",
+									"request": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{rshost}}/categories/search?name=a",
+											"host": [
+												"{{rshost}}"
+											],
+											"path": [
+												"categories",
+												"search"
+											],
+											"query": [
+												{
+													"key": "name",
+													"value": "a"
+												}
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						},
+						{
+							"name": "User",
+							"item": [
+								{
+									"name": "Users (admin only)",
+									"request": {
+										"auth": {
+											"type": "bearer",
+											"bearer": [
+												{
+													"key": "token",
+													"value": "{{token}}",
+													"type": "string"
+												}
+											]
+										},
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{rshost}}/users?size=1",
+											"host": [
+												"{{rshost}}"
+											],
+											"path": [
+												"users"
+											],
+											"query": [
+												{
+													"key": "size",
+													"value": "1"
+												}
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "User by id (self or admin only)",
+									"request": {
+										"auth": {
+											"type": "bearer",
+											"bearer": [
+												{
+													"key": "token",
+													"value": "{{token}}",
+													"type": "string"
+												}
+											]
+										},
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{rshost}}/users/2",
+											"host": [
+												"{{rshost}}"
+											],
+											"path": [
+												"users",
+												"2"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "New User (admin only)",
+									"request": {
+										"auth": {
+											"type": "bearer",
+											"bearer": [
+												{
+													"key": "token",
+													"value": "{{token}}",
+													"type": "string"
+												}
+											]
+										},
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n  \"name\": \"Filipe Miranda\",\r\n  \"email\": \"filipeadm@gmail.com\",\r\n  \"password\": \"123456\",\r\n  \"birthDate\": \"1995-03-06\"\r\n}\r\n",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{rshost}}/users",
+											"host": [
+												"{{rshost}}"
+											],
+											"path": [
+												"users"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "User (admin only)",
+									"request": {
+										"auth": {
+											"type": "bearer",
+											"bearer": [
+												{
+													"key": "token",
+													"value": "{{token}}",
+													"type": "string"
+												}
+											]
+										},
+										"method": "PUT",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n  \"name\": \"João da Silva\"\r\n\r\n}\r\n",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{rshost}}/users/11",
+											"host": [
+												"{{rshost}}"
+											],
+											"path": [
+												"users",
+												"11"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "User by id (admin only)",
+									"request": {
+										"auth": {
+											"type": "bearer",
+											"bearer": [
+												{
+													"key": "token",
+													"value": "{{token}}",
+													"type": "string"
+												}
+											]
+										},
+										"method": "DELETE",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{rshost}}/users/11",
+											"host": [
+												"{{rshost}}"
+											],
+											"path": [
+												"users",
+												"11"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "User by Name (admin only)",
+									"protocolProfileBehavior": {
+										"disableBodyPruning": true
+									},
+									"request": {
+										"auth": {
+											"type": "bearer",
+											"bearer": [
+												{
+													"key": "token",
+													"value": "{{token}}",
+													"type": "string"
+												}
+											]
+										},
+										"method": "GET",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"name\":\"jo\"\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{rshost}}/users/search?name",
+											"host": [
+												"{{rshost}}"
+											],
+											"path": [
+												"users",
+												"search"
+											],
+											"query": [
+												{
+													"key": "name",
+													"value": null
+												}
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "User logged",
+									"request": {
+										"auth": {
+											"type": "bearer",
+											"bearer": [
+												{
+													"key": "token",
+													"value": "{{token}}",
+													"type": "string"
+												}
+											]
+										},
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{rshost}}/users/me",
+											"host": [
+												"{{rshost}}"
+											],
+											"path": [
+												"users",
+												"me"
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						},
+						{
+							"name": "Loan",
+							"item": [
+								{
+									"name": "Loans (admin only)",
+									"request": {
+										"auth": {
+											"type": "bearer",
+											"bearer": [
+												{
+													"key": "token",
+													"value": "{{token}}",
+													"type": "string"
+												}
+											]
+										},
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{rshost}}/loans?size=15",
+											"host": [
+												"{{rshost}}"
+											],
+											"path": [
+												"loans"
+											],
+											"query": [
+												{
+													"key": "size",
+													"value": "15"
+												}
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Loan by id (self or admin only)",
+									"request": {
+										"auth": {
+											"type": "bearer",
+											"bearer": [
+												{
+													"key": "token",
+													"value": "{{token}}",
+													"type": "string"
+												}
+											]
+										},
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{rshost}}/loans/1",
+											"host": [
+												"{{rshost}}"
+											],
+											"path": [
+												"loans",
+												"1"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "All Loans (admin only)",
+									"request": {
+										"auth": {
+											"type": "bearer",
+											"bearer": [
+												{
+													"key": "token",
+													"value": "{{token}}",
+													"type": "string"
+												}
+											]
+										},
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{rshost}}/loans/all",
+											"host": [
+												"{{rshost}}"
+											],
+											"path": [
+												"loans",
+												"all"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Opened Loans (admin only)",
+									"request": {
+										"auth": {
+											"type": "bearer",
+											"bearer": [
+												{
+													"key": "token",
+													"value": "{{token}}",
+													"type": "string"
+												}
+											]
+										},
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{rshost}}}/loans/opened",
+											"host": [
+												"{{rshost}}}"
+											],
+											"path": [
+												"loans",
+												"opened"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Overdue Loans (admin only)",
+									"request": {
+										"auth": {
+											"type": "bearer",
+											"bearer": [
+												{
+													"key": "token",
+													"value": "{{token}}",
+													"type": "string"
+												}
+											]
+										},
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{rshost}}/loans/overdue",
+											"host": [
+												"{{rshost}}"
+											],
+											"path": [
+												"loans",
+												"overdue"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Most loaned books (admin only)",
+									"request": {
+										"auth": {
+											"type": "bearer",
+											"bearer": [
+												{
+													"key": "token",
+													"value": "{{token}}",
+													"type": "string"
+												}
+											]
+										},
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{rshost}}/loans/most-loaned?startDate=2025-01-01&endDate=2025-12-31&limit=5",
+											"host": [
+												"{{rshost}}"
+											],
+											"path": [
+												"loans",
+												"most-loaned"
+											],
+											"query": [
+												{
+													"key": "startDate",
+													"value": "2025-01-01"
+												},
+												{
+													"key": "endDate",
+													"value": "2025-12-31"
+												},
+												{
+													"key": "limit",
+													"value": "5"
+												}
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Loans Returned with Delay (admin only)",
+									"request": {
+										"auth": {
+											"type": "bearer",
+											"bearer": [
+												{
+													"key": "token",
+													"value": "{{token}}",
+													"type": "string"
+												}
+											]
+										},
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{rshost}}/loans/returned-with-delay",
+											"host": [
+												"{{rshost}}"
+											],
+											"path": [
+												"loans",
+												"returned-with-delay"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "New Loan (admin only)",
+									"request": {
+										"auth": {
+											"type": "bearer",
+											"bearer": [
+												{
+													"key": "token",
+													"value": "{{token}}",
+													"type": "string"
+												}
+											]
+										},
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n  \"loanDate\": \"2025-07-01\",\r\n  \"returnDate\": \"2025-07-15\",\r\n  \"userId\": 1,\r\n  \"bookId\": 2\r\n}\r\n",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{rshost}}/loans",
+											"host": [
+												"{{rshost}}"
+											],
+											"path": [
+												"loans"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Loan (admin only)",
+									"request": {
+										"auth": {
+											"type": "bearer",
+											"bearer": [
+												{
+													"key": "token",
+													"value": "{{token}}",
+													"type": "string"
+												}
+											]
+										},
+										"method": "PUT",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n  \"loanDate\": \"2025-07-01\",\r\n  \"returnDate\": \"2025-07-15\",\r\n  \"userId\": 1,\r\n  \"bookId\": 2\r\n}\r\n",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{rshost}}/loans/11",
+											"host": [
+												"{{rshost}}"
+											],
+											"path": [
+												"loans",
+												"11"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Loan by id (admin only)",
+									"request": {
+										"auth": {
+											"type": "bearer",
+											"bearer": [
+												{
+													"key": "token",
+													"value": "{{token}}",
+													"type": "string"
+												}
+											]
+										},
+										"method": "DELETE",
+										"header": [],
+										"url": {
+											"raw": "{{rshost}}/loans/11",
+											"host": [
+												"{{rshost}}"
+											],
+											"path": [
+												"loans",
+												"11"
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						},
+						{
+							"name": "Reservations",
+							"item": [
+								{
+									"name": "Reservations (admin only)",
+									"request": {
+										"auth": {
+											"type": "bearer",
+											"bearer": [
+												{
+													"key": "token",
+													"value": "{{token}}",
+													"type": "string"
+												}
+											]
+										},
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{rshost}}/reservations?size=1",
+											"host": [
+												"{{rshost}}"
+											],
+											"path": [
+												"reservations"
+											],
+											"query": [
+												{
+													"key": "size",
+													"value": "1"
+												}
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "All Reservations (admin only)",
+									"request": {
+										"auth": {
+											"type": "bearer",
+											"bearer": [
+												{
+													"key": "token",
+													"value": "{{token}}",
+													"type": "string"
+												}
+											]
+										},
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{rshost}}/reservations/all",
+											"host": [
+												"{{rshost}}"
+											],
+											"path": [
+												"reservations",
+												"all"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Reservation by Id (self or admin only)",
+									"request": {
+										"auth": {
+											"type": "bearer",
+											"bearer": [
+												{
+													"key": "token",
+													"value": "{{token}}",
+													"type": "string"
+												}
+											]
+										},
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{rshost}}/reservations/2",
+											"host": [
+												"{{rshost}}"
+											],
+											"path": [
+												"reservations",
+												"2"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Completed Reservations (admin only)",
+									"request": {
+										"auth": {
+											"type": "bearer",
+											"bearer": [
+												{
+													"key": "token",
+													"value": "{{token}}",
+													"type": "string"
+												}
+											]
+										},
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{rshost}}/reservations/completed",
+											"host": [
+												"{{rshost}}"
+											],
+											"path": [
+												"reservations",
+												"completed"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Confirmed Reservations (admin only)",
+									"request": {
+										"auth": {
+											"type": "bearer",
+											"bearer": [
+												{
+													"key": "token",
+													"value": "{{token}}",
+													"type": "string"
+												}
+											]
+										},
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{rshost}}/reservations/confirmed",
+											"host": [
+												"{{rshost}}"
+											],
+											"path": [
+												"reservations",
+												"confirmed"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Expired Reservations (admin only)",
+									"request": {
+										"auth": {
+											"type": "bearer",
+											"bearer": [
+												{
+													"key": "token",
+													"value": "{{token}}",
+													"type": "string"
+												}
+											]
+										},
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{rshost}}/reservations/expired",
+											"host": [
+												"{{rshost}}"
+											],
+											"path": [
+												"reservations",
+												"expired"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "New Reservation (admin only)",
+									"request": {
+										"auth": {
+											"type": "bearer",
+											"bearer": [
+												{
+													"key": "token",
+													"value": "{{token}}",
+													"type": "string"
+												}
+											]
+										},
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n  \"reservationDate\": \"2025-06-30\",\r\n  \"status\": \"CONFIRMED\",\r\n  \"userId\": 1,\r\n  \"bookId\": 1\r\n}\r\n",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{rshost}}/reservations",
+											"host": [
+												"{{rshost}}"
+											],
+											"path": [
+												"reservations"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Reservation (admin only)",
+									"request": {
+										"auth": {
+											"type": "bearer",
+											"bearer": [
+												{
+													"key": "token",
+													"value": "{{token}}",
+													"type": "string"
+												}
+											]
+										},
+										"method": "PUT",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n  \"reservationDate\": \"2025-08-01\",\r\n  \"status\": \"CONFIRMED\",\r\n  \"userId\": 1,\r\n  \"bookId\": 8\r\n}\r\n",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{rshost}}/reservations/11",
+											"host": [
+												"{{rshost}}"
+											],
+											"path": [
+												"reservations",
+												"11"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Reservation by Id (admin only)",
+									"request": {
+										"auth": {
+											"type": "bearer",
+											"bearer": [
+												{
+													"key": "token",
+													"value": "{{token}}",
+													"type": "string"
+												}
+											]
+										},
+										"method": "DELETE",
+										"header": [],
+										"url": {
+											"raw": "{{rshost}}/reservations/11",
+											"host": [
+												"{{rshost}}"
+											],
+											"path": [
+												"reservations",
+												"11"
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						},
+						{
+							"name": "Fine",
+							"item": [
+								{
+									"name": "Fines (admin only)",
+									"request": {
+										"auth": {
+											"type": "bearer",
+											"bearer": [
+												{
+													"key": "token",
+													"value": "{{token}}",
+													"type": "string"
+												}
+											]
+										},
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{rshost}}/fines?size=15",
+											"host": [
+												"{{rshost}}"
+											],
+											"path": [
+												"fines"
+											],
+											"query": [
+												{
+													"key": "size",
+													"value": "15"
+												}
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Fines by Id (self or admin only)",
+									"request": {
+										"auth": {
+											"type": "bearer",
+											"bearer": [
+												{
+													"key": "token",
+													"value": "{{token}}",
+													"type": "string"
+												}
+											]
+										},
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{rshost}}/fines/1",
+											"host": [
+												"{{rshost}}"
+											],
+											"path": [
+												"fines",
+												"1"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Fine by Id (admin only)",
+									"request": {
+										"auth": {
+											"type": "bearer",
+											"bearer": [
+												{
+													"key": "token",
+													"value": "{{token}}",
+													"type": "string"
+												}
+											]
+										},
+										"method": "DELETE",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{rshost}}/fines/4",
+											"host": [
+												"{{rshost}}"
+											],
+											"path": [
+												"fines",
+												"4"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "New Fine (admin only)",
+									"request": {
+										"auth": {
+											"type": "bearer",
+											"bearer": [
+												{
+													"key": "token",
+													"value": "{{token}}",
+													"type": "string"
+												}
+											]
+										},
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"amount\":24.00,\r\n    \"appliedAt\":\"2025-07-15T03:00:00Z\",\r\n    \"paidAt\": null,\r\n    \"paid\":false,\r\n    \"loanId\":11\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{rshost}}/fines",
+											"host": [
+												"{{rshost}}"
+											],
+											"path": [
+												"fines"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Fine (admin only)",
+									"request": {
+										"auth": {
+											"type": "bearer",
+											"bearer": [
+												{
+													"key": "token",
+													"value": "{{token}}",
+													"type": "string"
+												}
+											]
+										},
+										"method": "PUT",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"amount\":24.00,\r\n    \"appliedAt\":\"2025-07-15T03:00:00Z\",\r\n    \"paidAt\": \"2025-07-15T03:00:00Z\",\r\n    \"paid\":true,\r\n    \"loanId\":11\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{rshost}}/fines/4",
+											"host": [
+												"{{rshost}}"
+											],
+											"path": [
+												"fines",
+												"4"
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						}
+					]
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		}
+	]
+}
