@@ -14,6 +14,7 @@ import com.myprojects.LibraryManager.repositories.ReservationRepository;
 import com.myprojects.LibraryManager.repositories.UserRepository;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -22,6 +23,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
@@ -40,6 +42,9 @@ public class UserService implements UserDetailsService {
     private LoanRepository loanRepository;
     @Autowired
     private ReservationRepository reservationRepository;
+    @Autowired
+    @Lazy
+    private PasswordEncoder passwordEncoder;
 
     @Transactional(readOnly = true)
     public UserResponseDTO findById(Long id) {
@@ -117,7 +122,7 @@ public class UserService implements UserDetailsService {
             user.setEmail(userRequestDTO.getEmail());
         }
         if (userRequestDTO.getPassword() != null) {
-            user.setPassword(userRequestDTO.getPassword());
+            user.setPassword(passwordEncoder.encode(userRequestDTO.getPassword()));
         }
         if (userRequestDTO.getBirthDate() != null) {
             user.setBirthDate(userRequestDTO.getBirthDate());
