@@ -4,8 +4,8 @@ FROM maven:3.9.4-eclipse-temurin-21 AS backend-build
 WORKDIR /app/backend
 
 # Copia pom.xml e src do backend
-COPY backend/pom.xml ./
-COPY backend/src ./src
+COPY LibraryManager/pom.xml ./
+COPY LibraryManager/src ./src
 
 # Build do backend, pulando testes
 RUN mvn clean package -DskipTests
